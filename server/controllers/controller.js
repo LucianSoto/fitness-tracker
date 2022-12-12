@@ -3,7 +3,11 @@ const User = require('../models/user')
 
 
 exports.createUser = async (req,res) => {
-  const {fullname, email, password} = req.body
+  const {user_name, email, password} = req.body
+  // await User.findOne({email: req.body.email }, (err, result) => {
+  //   if(err) throw err
+  //   console.log(result, 'found result')
+  // })
   const isNewUser = await User.isEmailInUse(email)
   if(!isNewUser)
   return res.json({

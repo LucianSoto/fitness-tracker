@@ -2,6 +2,8 @@ import logo from './assets/logo192.png';
 import './App.css';
 
 function App() {
+  //https://www.geeksforgeeks.org/how-to-validate-password-is-strong-or-not-in-reactjs/
+  //// for validating password/strength with react
   return (
     <div className="App">
       <header className="">
