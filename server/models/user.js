@@ -32,7 +32,7 @@ userSchema.pre('save', function (next) {
   }
 })
 
-userSchema.methods.comparePassword = async function (password ) {
+userSchema.statics.comparePassword = async function (password ) {
   if(!password) throw new Error('Password is missing, cannot compare')
   try {
     const result = await bcrypt.compare(password, this.password)

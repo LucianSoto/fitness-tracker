@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
 })
 
 router.post('/create_user', createUser)
-router.get('/sign_in', signIn)
+router.post('/sign_in', signIn)
 router.get('/home/:id', home)
 router.get('/update_exercise/:id/:exercise', updateExercise)
 module.exports = router

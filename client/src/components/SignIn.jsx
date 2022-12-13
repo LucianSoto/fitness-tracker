@@ -4,7 +4,7 @@ const SignIn = () => {
   const [formData, setFormData] = useState({
     user_name: '',
     email: '',
-    pw: '',
+    password: '',
   })
 
   const mounted = useRef(false)
@@ -17,16 +17,15 @@ const SignIn = () => {
 
   const onSubmit = async (e, formData) => {
     e.preventDefault()
-
-    console.log(formData)
-    if(formData.user_name.length > 2 && formData.email.length > 6 && formData.pw.length > 0) {
+    if(formData.email.length > 6 && formData.password.length > 0) {
       const res = await fetch("http://localhost:9000/sign_in", {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
+          "Content-Type": "application/json",
         },
-        body: `user_name=${formData.user_name}&email=${formData.email}&password=${formData.pw}`
+        body: JSON.stringify(formData)
       })
+      console.log(res.json())
       const data = res.json()
       console.log(data.data)
     } else {
@@ -47,14 +46,14 @@ const SignIn = () => {
     <div>
       <h2>Sign In</h2>
       <form action="submit" onSubmit={(e) => onSubmit(e,formData)} className="sign-in-form">
-        <label htmlFor="user_name">Full Name</label>
+        {/* <label htmlFor="user_name">Full Name</label>
         <input 
           type="text" 
           name='user_name'  
           onChange={(e) => onChange(e.target)}  
           value={formData.user_name}
         />
-        <br />
+        <br /> */}
         <label htmlFor="email">Email</label>
         <input 
           type="email" 
@@ -66,9 +65,9 @@ const SignIn = () => {
         <label htmlFor="password">Password</label>
         <input 
           type="password" 
-          name='pw'
+          name='password'
           onChange={(e) => onChange(e.target)}
-          value={formData.pw}
+          value={formData.password}
         />
         <br />
         <button type='submit'>SUBMIT</button>

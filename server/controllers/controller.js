@@ -27,22 +27,22 @@ const createUser = async (req,res) => {
 }
 
 const signIn = async (req, res) => {
-  console.log('signing in')
+  console.log('signing in', req.body)
   const {email, password} = req.body
   res.send('create endpoint working')
   
   const isEmail = await User.isEmailInUse(email)
   const isPassword = await User.comparePassword(password)
 
-  if(!isEmail) return res.json({
-    success: false,
-    message: "Email does not exist."
-  })
+  // if(!isEmail) return res.json({
+  //   success: false,
+  //   message: "Email does not exist."
+  // })
 
-  if(!isPassword) return res.json({
-    success: false,
-    message: "Password does not match."
-  })
+  // if(!isPassword) return res.json({
+  //   success: false,
+  //   message: "Password does not match."
+  // })
 
   if(isEmail && isPassword)
     return res.status(200).json({
