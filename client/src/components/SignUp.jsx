@@ -29,7 +29,7 @@ const SignUp = () => {
       })
       const data = await res.json()
       console.log(data.user.user_name)
-      navigate(`/user/:${data.user.user_name}`)
+      navigate(`/user/${data.user.user_name}`)
     } else {
       alert('Check all fields.')
     }

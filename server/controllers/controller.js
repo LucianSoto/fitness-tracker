@@ -57,9 +57,9 @@ const signIn = async (req, res) => {
 
 const home = async (req, res) => {
   console.log('rendering home')
-  const {email} = req.body
+  const {name} = req.body
 
-  User.findBy(email, (err, user) => {
+  User.find(name, (err, user) => {
     if(err) {
       res.send(err)
     } else {
