@@ -1,7 +1,7 @@
 import {useState, useEffect, useRef} from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const SignIn = () => {
+const SignUp = () => {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     user_name: '',
@@ -20,16 +20,16 @@ const SignIn = () => {
   const onSubmit = async (e, formData) => {
     e.preventDefault()
     if(formData.email.length > 6 && formData.password.length > 0) {
-      const res = await fetch("http://localhost:9000/sign_in", {
+      const res = await fetch("http://localhost:9000/sign_up", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData)
       })
-      console.log(res.json())
-      const data = res.json()
-      console.log(data.data)
+      const data = await res.json()
+      console.log(data.user.user_name)
+      navigate(`/user/:${data.user.user_name}`)
     } else {
       alert('Check all fields.')
     }
@@ -41,23 +41,21 @@ const SignIn = () => {
       ...prevState,
       [e.name] : e.value
     }))
-    console.log(formData)
   }
-
 
 
   return (
     <div>
-      <h2>Sign In</h2>
+      <h2>Sign Up for Fitness Account!</h2>
       <form action="submit" onSubmit={(e) => onSubmit(e,formData)} className="sign-in-form">
-        {/* <label htmlFor="user_name">Full Name</label>
+        <label htmlFor="user_name">Full Name</label>
         <input 
           type="text" 
           name='user_name'  
           onChange={(e) => onChange(e.target)}  
           value={formData.user_name}
         />
-        <br /> */}
+        <br />
         <label htmlFor="email">Email</label>
         <input 
           type="email" 
@@ -77,9 +75,9 @@ const SignIn = () => {
         <button type='submit'>SUBMIT</button>
       </form>
       <p>or</p>
-      <p className="signup button" onClick={() => navigate('/sign_up')}>Sign Up</p>
+      <p className="signup button" onClick={() => navigate('/')}>Sign In</p>
     </div>
   )
 }
 
-export default SignIn
+export default SignUp

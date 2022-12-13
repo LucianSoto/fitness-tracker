@@ -32,25 +32,37 @@ userSchema.pre('save', function (next) {
   }
 })
 
-userSchema.statics.comparePassword = async function (password ) {
-  if(!password) throw new Error('Password is missing, cannot compare')
-  try {
-    const result = await bcrypt.compare(password, this.password)
-    return result
-  } catch (err) {
-    console.log(err.message, 'password comparing error')
-  }
-}
+// userSchema.statics.comparePassword = async function (password, email) {
+//   if(!password) throw new Error('Password is missing, cannot compare')
+
+//   const queryUser = await this.findOne({email: email}, function (err, result) {
+//     if(err) throw err
+//     else return result, console.log(result, 'at queryUser')
+//   }).clone().catch(function(err){console.log(err)})
+
+//   console.log(queryUser)
+//   try {
+//     // console.log(password, queryUser.password, 'password to compare')
+//     const result = await bcrypt.compare(password, queryUser.password, function (err, res) {
+//       if(res) {
+//         return res, console.log(res, 'at pw')
+//       } else {
+//         return false
+//       }
+//     })
+//   } catch (err) {
+//     return err, 'error code'
+//   }
+// }
 
 userSchema.statics.isEmailInUse = async function (email) {
   if(!email) throw new Error("Invalid Email")
   try {
     const userExists = await this.findOne({ email }, function (err,result) {
       if(err) throw err
-      console.log(result)
+      console.log(result, 'email res')
     }).clone().catch(function(err){ console.log(err)})
     if(userExists) return false
-    console.log('user exists', userExists)
     return true
   } catch (err) {
     console.log('Error inside thisEmailInUse method', err)

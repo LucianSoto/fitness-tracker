@@ -1,14 +1,10 @@
 const express = require('express')
 const User = require('../models/user')
-
-
+const bcrypt = require('bcrypt')
 
 const createUser = async (req,res) => {
   const {user_name, email, password} = req.body
-  // await User.findOne({email: req.body.email }, (err, result) => {
-  //   if(err) throw err
-  //   console.log(result, 'found result')
-  // })
+
   const isNewUser = await User.isEmailInUse(email)
   if(!isNewUser)
   return res.json({
@@ -16,6 +12,11 @@ const createUser = async (req,res) => {
     message: 'Email already in use',
   })
 
+  const hashPassword = await bcrypt.hash(password, 10, function (err, hash){
+      if(err) return err
+      else return hash , console.log('hashed~!,', hash)
+    })
+  
   const user = await User({
     user_name,
     email,
@@ -27,12 +28,14 @@ const createUser = async (req,res) => {
 }
 
 const signIn = async (req, res) => {
-  console.log('signing in', req.body)
   const {email, password} = req.body
-  res.send('create endpoint working')
+  // res.send('create endpoint working')
+
+
   
+  // console.log(queryUser.password, '39 here')
   const isEmail = await User.isEmailInUse(email)
-  const isPassword = await User.comparePassword(password)
+  const isPassword = await User.comparePassword(password, email)
 
   // if(!isEmail) return res.json({
   //   success: false,
@@ -43,8 +46,9 @@ const signIn = async (req, res) => {
   //   success: false,
   //   message: "Password does not match."
   // })
+  console.log(isEmail, isPassword, 'is or not')
 
-  if(isEmail && isPassword)
+  if(!isEmail && isPassword)
     return res.status(200).json({
       message: "Successfully signed in.",
     })

@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
   res.send('router working')
 })
 
-router.post('/create_user', createUser)
+router.post('/sign_up', createUser)
 router.post('/sign_in', signIn)
 router.get('/home/:id', home)
 router.get('/update_exercise/:id/:exercise', updateExercise)
