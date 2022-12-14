@@ -56,16 +56,16 @@ const signIn = async (req, res) => {
 }
 
 const home = async (req, res) => {
-  console.log('rendering home')
-  const {name} = req.body
+  const {id} = req.params
+  console.log(id)
 
-  User.find(name, (err, user) => {
+  User.findById(id, (err, data) => {
     if(err) {
       res.send(err)
     } else {
       res.status(200).json({
         message: "Found user",
-        data: user,
+        data: data,
       })
     }
   }) 

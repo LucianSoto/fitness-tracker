@@ -14,23 +14,24 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-  }
+  }, 
+  
 })
 
 ////////////
   //Tried using arrow functions for the code below only to find that arrow functions change the scope, thus not allowing me to use the this. method perhaps for nodejs stick to regular funcitons.
 //////
 
-userSchema.pre('save', function (next) {
-  if(this.isModified('password')){
-    bcrypt.hash(this.password, 8, (err, hash) => {
-      if(err) return next(err)
+// userSchema.pre('save', function (next) {
+//   if(this.isModified('password')){
+//     bcrypt.hash(this.password, 8, (err, hash) => {
+//       if(err) return next(err)
 
-      this.password = hash
-      next() 
-    })
-  }
-})
+//       this.password = hash
+//       next() 
+//     })
+//   }
+// })
 
 // userSchema.statics.comparePassword = async function (password, email) {
 //   if(!password) throw new Error('Password is missing, cannot compare')

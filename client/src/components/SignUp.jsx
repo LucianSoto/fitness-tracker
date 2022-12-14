@@ -28,8 +28,8 @@ const SignUp = () => {
         body: JSON.stringify(formData)
       })
       const data = await res.json()
-      console.log(data.user.user_name)
-      navigate(`/user/${data.user.user_name}`)
+      console.log(data.user._id)
+      navigate(`/user/${data.user._id}`)
     } else {
       alert('Check all fields.')
     }
@@ -75,7 +75,7 @@ const SignUp = () => {
         <button type='submit'>SUBMIT</button>
       </form>
       <p>or</p>
-      <p className="signup button" onClick={() => navigate('/')}>Sign In</p>
+      <button className="signup button" onClick={() => navigate('/')}>Sign In</button>
     </div>
   )
 }
