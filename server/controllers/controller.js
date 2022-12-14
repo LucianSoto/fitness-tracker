@@ -3,7 +3,7 @@ const User = require('../models/user')
 const bcrypt = require('bcrypt')
 
 const createUser = async (req,res) => {
-  const {user_name, email, password} = req.body
+  const {user_name, email, password, exercises} = req.body
 
   const isNewUser = await User.isEmailInUse(email)
   if(!isNewUser)
@@ -14,13 +14,14 @@ const createUser = async (req,res) => {
 
   const hashPassword = await bcrypt.hash(password, 10, function (err, hash){
       if(err) return err
-      else return hash , console.log('hashed~!,', hash)
+      else return hash 
     })
   
   const user = await User({
     user_name,
     email,
     password,
+    exercises,
   })
 
   await user.save()

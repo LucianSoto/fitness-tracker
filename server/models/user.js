@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
+const exerciseSchema = require('./exercises')
 
 const userSchema = new mongoose.Schema({
   user_name: {
@@ -15,8 +16,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   }, 
-  
-})
+  exercises: [exerciseSchema]
+}, {minimize: false})
 
 ////////////
   //Tried using arrow functions for the code below only to find that arrow functions change the scope, thus not allowing me to use the this. method perhaps for nodejs stick to regular funcitons.
@@ -61,7 +62,6 @@ userSchema.statics.isEmailInUse = async function (email) {
   try {
     const userExists = await this.findOne({ email }, function (err,result) {
       if(err) throw err
-      console.log(result, 'email res')
     }).clone().catch(function(err){ console.log(err)})
     if(userExists) return false
     return true
