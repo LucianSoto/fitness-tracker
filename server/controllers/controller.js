@@ -3,7 +3,7 @@ const User = require('../models/user')
 const bcrypt = require('bcrypt')
 
 const createUser = async (req,res) => {
-  const {user_name, email, password, exercises} = req.body
+  const {user_name, email, password } = req.body
 
   const isNewUser = await User.isEmailInUse(email)
   if(!isNewUser)
@@ -14,7 +14,7 @@ const createUser = async (req,res) => {
 
   const hashPassword = await bcrypt.hash(password, 10, function (err, hash){
       if(err) return err
-      else return hash 
+      else return hash , console.log('hashed~!', hash)
     })
   
   const user = await User({
@@ -38,15 +38,6 @@ const signIn = async (req, res) => {
   const isEmail = await User.isEmailInUse(email)
   const isPassword = await User.comparePassword(password, email)
 
-  // if(!isEmail) return res.json({
-  //   success: false,
-  //   message: "Email does not exist."
-  // })
-
-  // if(!isPassword) return res.json({
-  //   success: false,
-  //   message: "Password does not match."
-  // })
   console.log(isEmail, isPassword, 'is or not')
 
   if(!isEmail && isPassword)
