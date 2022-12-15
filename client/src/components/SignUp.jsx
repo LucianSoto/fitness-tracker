@@ -43,7 +43,6 @@ const SignUp = () => {
     }))
   }
 
-
   return (
     <div>
       <h2>Sign Up for Fitness Account!</h2>

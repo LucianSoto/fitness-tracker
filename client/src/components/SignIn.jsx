@@ -27,9 +27,11 @@ const SignIn = () => {
         },
         body: JSON.stringify(formData)
       })
-      console.log(res.json())
-      const data = res.json()
-      console.log(data.data)
+      const data = await res.json()
+      console.log(data.data.id)
+      navigate(`/user/${data.data.id}`)
+      // const data = res.json()
+      // console.log(data.data)
     } else {
       alert('Check all fields.')
     }
@@ -41,10 +43,7 @@ const SignIn = () => {
       ...prevState,
       [e.name] : e.value
     }))
-    console.log(formData)
   }
-
-
 
   return (
     <div>

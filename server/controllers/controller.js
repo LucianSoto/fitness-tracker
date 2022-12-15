@@ -1,9 +1,10 @@
 const express = require('express')
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
+const { MongoMissingCredentialsError } = require('mongodb')
 
 const createUser = async (req,res) => {
-  const {user_name, email, password } = req.body
+  const {user_name, email, password, exercises } = req.body
 
   const isNewUser = await User.isEmailInUse(email)
   if(!isNewUser)
@@ -11,45 +12,32 @@ const createUser = async (req,res) => {
     success: false,
     message: 'Email already in use',
   })
-
-  const hashPassword = await bcrypt.hash(password, 10, function (err, hash){
-      if(err) return err
-      else return hash , console.log('hashed~!', hash)
-    })
-  
+  // use Schema Pre  to hash passwords
   const user = await User({
     user_name,
     email,
     password,
     exercises,
   })
-
   await user.save()
   res.json({ success: true, user })
 }
 
 const signIn = async (req, res) => {
   const {email, password} = req.body
-  // res.send('create endpoint working')
-
-
-  
-  // console.log(queryUser.password, '39 here')
-  const isEmail = await User.isEmailInUse(email)
-  const isPassword = await User.comparePassword(password, email)
-
-  console.log(isEmail, isPassword, 'is or not')
-
-  if(!isEmail && isPassword)
-    return res.status(200).json({
-      message: "Successfully signed in.",
+  User.findOne({email: email}, function(err, user) {
+    if(err)throw err
+    //we pass the user in the call back function to the comparepw method
+    user.comparePassword(password, function(err, isMatch) {
+      if(err) throw errconsole.log(isMatch)
+      return console.log(isMatch, 'is match')
     })
-  // send success and react will reroute.
+    return res.status(200).json({message: "success", data: {id: user.id} })
+  })  
 }
 
 const home = async (req, res) => {
   const {id} = req.params
-  console.log(id)
 
   User.findById(id, (err, data) => {
     if(err) {
@@ -86,4 +74,23 @@ const updateExercise = async (req, res) => {
     )
 }
 
-module.exports = {signIn, home, updateExercise, createUser}
+const addExercise = async (req, res) => {
+
+  const {id} = req.body
+  User.findByIdAndUpdate(id,
+    { $push: {"exercises": {
+      x_name: req.body.exercise,
+      duration: req.body.duration
+    }} },
+    {new: true},
+    (err, user) => {
+      if(err) {
+        res.send(err, 'Problem adding exercise')
+      } else {
+        res.status(200).json({message: "success", data: user})
+      }
+    }
+  )
+}
+
+module.exports = {signIn, home, updateExercise, createUser, addExercise}

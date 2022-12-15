@@ -10,6 +10,7 @@ const Home = () => {
   const [form, setForm] = useState({
     exercise: '',
     duration: 0,
+    id: params.user,
   })
 
   useEffect(() => {
@@ -26,9 +27,24 @@ const Home = () => {
     setUserData(data.data)
   }
 
-  const onSubmit = async (form) => {
+
+  const onSubmit = async (e, form) => {
+    e.preventDefault()
+    console.log(form, 'form')
     //find by id and add exercise
-    const res = await fetch('')
+    const res = await fetch(`http://localhost:9000/add_exercise/${params.user}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form)
+    })
+    // console.log(res.json())
+    const data = await res.json()
+    console.log(data.data, 'deeeeeiitaaa')
+    setUserData(prevState => (
+      data.data
+    ))
   }
 
   const onChange = (e) => {
@@ -38,6 +54,14 @@ const Home = () => {
     }))
   }
 
+  const editExercise =(e) => {
+    console.log(e, 'editing')
+  }
+
+  const deleteExercise = (e) => {
+    console.log(e, 'deleting')
+  }
+
   console.log(userData)
   return (
     <div>
@@ -45,7 +69,7 @@ const Home = () => {
       {/* <button className="add-exercise">
         Add Exercise
       </button> */}
-      <form action="submit" className="exercise-form">
+      <form action="submit" className="exercise-form" onSubmit={(e) => onSubmit(e, form)}>
         {/* <button className="close">X</button> */}
         <h3>Add an exercise!</h3>
         <label htmlFor="exercise" className="label">Exercise</label>
@@ -63,7 +87,7 @@ const Home = () => {
           onChange={(e)=> onChange(e.target)}
           value={form.duration}
         />
-        <button type='submit'>Submit</button>
+        <button type='submit'>Add</button>
       </form>
 
       <div className="exercise-table">
@@ -74,7 +98,16 @@ const Home = () => {
         </div>
 
         <div className="table">
-
+          {userData.exercises && 
+            userData.exercises.map((exr, i) => (
+              <div key={i}>
+                <p>{exr.x_name}</p>
+                <p>{exr.duration}</p>
+                <button className="edit-delete" onClick={(e)=> editExercise(e.target)}>edit</button>
+                <button className='edit-delete' onClick={(e)=> deleteExercise(e.target)}></button>
+              </div>
+            ))
+          }
         </div>
       </div>
     </div>
