@@ -70,12 +70,12 @@ const addExercise = async (req, res) => {
 }
 
 const updateExercise = async (req, res) => {
-  console.log('fetching update exercise', req.body.duration, req.body.name)
+  console.log('fetching update exercise', req.body.duration, req.body.exercise, req.body.id)
   const userId  = req.params
 
   User.findByIdAndUpdate( userId.id,
       {$set: { exercises: {
-        name: req.body.user_name,
+        x_name: req.body.exercise,
         duration: req.body.duration,
         _id: req.body.id
       }

@@ -84,12 +84,17 @@ const Home = () => {
       body: JSON.stringify(form)
     })
     const data = await res.json()
-    console.log(data)
+    console.log(data.data.exercises)
     //erase form
-    // setUserData(prevState => ({
-    //   ...prevState,
-    //   exercises: [...data.data]
-    // }))
+    setUserData(prevState => ({
+      ...prevState,
+      exercises: [...data.data.exercises]
+    }))
+    setForm({
+      exercise: '',
+      duration: 0,
+      id: params.user
+    })
   }
 
   const deleteExercise = async (e) => {
