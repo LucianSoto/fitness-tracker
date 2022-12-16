@@ -36,3 +36,42 @@
     transform: rotate(360deg);
   }
 }
+
+.user-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.exercise-table {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+}
+
+.table-headers {
+  margin-top: 50px;
+  width:100%;
+  display: grid;  
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.table-headers div {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.table {
+  width: 100%;
+}
+
+.table-item {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.buttons {
+  margin-top: 13px;
+}

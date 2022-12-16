@@ -1,10 +1,12 @@
 import {useEffect, useRef, useState} from 'react'
 import { useParams } from 'react-router-dom'
+// import '../' css
 
 const Home = () => {
   const mounted = useRef(false)
   const params = useParams()
 
+  const [addEdit, setAddEdit] = useState([false])
   const [userData, setUserData] = useState([])
   const [form, setForm] = useState({
     exercise: '',
@@ -29,7 +31,6 @@ const Home = () => {
 
   const onSubmit = async (e, form) => {
     e.preventDefault()
-    console.log(form, 'form')
     //find by id and add exercise
     const res = await fetch(`http://localhost:9000/add_exercise/${params.user}`, {
       method: "POST",
@@ -38,12 +39,16 @@ const Home = () => {
       },
       body: JSON.stringify(form)
     })
-    // console.log(res.json())
     const data = await res.json()
     console.log(data.data, 'added')
     setUserData(prevState => (
       data.data
     ))
+    setForm({
+      exercise: '',
+      duration: 0,
+      id: params.user,
+    })
   }
 
   const onChange = (e) => {
@@ -54,7 +59,37 @@ const Home = () => {
   }
 
   const editExercise =(e) => {
-    console.log(e._id, 'editing')
+    //change form or display text to day edit exercise
+    e.preventDefault()
+    const {id, name } = e.target
+    // console.log(e.target.getAttribute('duration'))
+    const duration = e.target.getAttribute('duration')
+    setForm({
+      exercise: name,
+      duration: duration,
+      id: id
+    })
+    setAddEdit(prevState => !prevState)
+  }
+
+  const submitEdit = async (e,form) => {
+    e.preventDefault()
+    console.log(form)
+
+    const res = await fetch(`http://localhost:9000/edit_exercise/${params.user}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form)
+    })
+    const data = await res.json()
+    console.log(data)
+    //erase form
+    // setUserData(prevState => ({
+    //   ...prevState,
+    //   exercises: [...data.data]
+    // }))
   }
 
   const deleteExercise = async (e) => {
@@ -62,6 +97,7 @@ const Home = () => {
     const {id} = e.target
     const requestBody = { id: id }
     if(window.confirm(`delete ${e.target.name}`)) {
+      //SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON  /// can also mean that the url path is wrong ei: post get or missspelled.
       const res = await fetch(`http://localhost:9000/delete/${params.user}`, {
         method: "POST",
         headers: {
@@ -70,8 +106,10 @@ const Home = () => {
         body: JSON.stringify(requestBody)
       })
       const data = await res.json()
-      console.log(data)
-      // setUserData(prevState => ())
+      setUserData(prevState => ({
+        ...prevState,
+        exercises: [...data.data.exercises]
+      }))
     } else {
       return null
     }
@@ -81,12 +119,12 @@ const Home = () => {
 
   /// if you pass e.target  you cannot call e.preventDefault()
   return (
-    <div>
+    <div className='user-container'>
       <p className="user-name">Welcome~! {userData.user_name}</p>
       {/* <button className="add-exercise">
         Add Exercise
       </button> */}
-      <form action="submit" className="exercise-form" onSubmit={(e) => onSubmit(e, form)}>
+      <form action="submit" className="exercise-form" onSubmit={(e) => {addEdit ? onSubmit(e,form) : submitEdit(e, form)}}>
         {/* <button className="close">X</button> */}
         <h3>Add an exercise!</h3>
         <label htmlFor="exercise" className="label">Exercise</label>
@@ -104,7 +142,8 @@ const Home = () => {
           onChange={(e)=> onChange(e.target)}
           value={form.duration}
         />
-        <button type='submit'>Add</button>
+        <br />
+        <button type='submit'>{addEdit ? "Add" : "Edit"}</button>
       </form>
 
       <div className="exercise-table">
@@ -117,11 +156,13 @@ const Home = () => {
         <div className="table">
           {userData.exercises && 
             userData.exercises.map((exr, i) => (
-              <div key={i}>
+              <div className='table-item' key={i}>
                 <p>{exr.x_name}</p>
                 <p>{exr.duration}</p>
-                <button className="edit-delete" onClick={(e)=> editExercise(e.target)}>edit</button>
-                <button id={exr._id} duration={exr.duration} name={exr.x_name} className='edit-delete' onClick={(e)=> deleteExercise(e)}>delete</button>
+                <div className="buttons">
+                  <button id={exr._id} duration={exr.duration} name={exr.x_name} className="edit-delete" onClick={(e)=> editExercise(e)}>edit</button>
+                  <button id={exr._id} duration={exr.duration} name={exr.x_name} className='edit-delete' onClick={(e)=> deleteExercise(e)}>delete</button>
+                </div>
               </div>
             ))
           }

@@ -51,29 +51,6 @@ const home = async (req, res) => {
   }) 
 }
 
-const updateExercise = async (req, res) => {
-  console.log('fetching update exercise')
-  const { id } = req.params
-
-  User.findByIdAndUpdate(id,
-      {$set: {
-        user_name: req.body.user_name,
-        exercises: req.body.exercises,
-      }},
-      {new: true},
-      (err, user) => {
-        if(err){
-          res.status(400).json({error: err})
-        } else {
-          res.status(200).json({
-            message: "Update call success",
-            data: user,
-          })
-        }
-      }
-    )
-}
-
 const addExercise = async (req, res) => {
   const {id} = req.body
   User.findByIdAndUpdate(id,
@@ -92,17 +69,35 @@ const addExercise = async (req, res) => {
   )
 }
 
+const updateExercise = async (req, res) => {
+  console.log('fetching update exercise', req.body.duration, req.body.name)
+  const userId  = req.params
+
+  User.findByIdAndUpdate( userId.id,
+      {$set: { exercises: {
+        name: req.body.user_name,
+        duration: req.body.duration,
+        _id: req.body.id
+      }
+      }},
+      {new: true, lean: true},
+      (err, user) => {
+        if(err){
+          res.status(400).json({ message: 'error updating'})
+        } else {
+          res.status(200).json({
+            message: "Update success",
+            data: user,
+          })
+        }
+      }
+  )
+}
+
+
 const deleteExercise = async (req, res) => {
   const {id} = req.body
   const userId = req.params
-
-  console.log(id, userId)
-
-  // User.findById( userId.id, (err, user) =>{
-  //   if(err) { console.log(err)}
-  //   else {console.log(user)}
-  // })
-
 
   User.findByIdAndUpdate( userId.id ,
     { $pull: { exercises: { _id: id }}},
