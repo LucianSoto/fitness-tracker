@@ -5,7 +5,6 @@ const Home = () => {
   const mounted = useRef(false)
   const params = useParams()
 
-  console.log(params.user)
   const [userData, setUserData] = useState([])
   const [form, setForm] = useState({
     exercise: '',
@@ -64,7 +63,7 @@ const Home = () => {
     const {id} = e.target
     const requestBody = { id: id }
     // console.log(requestBody, 'req body')
-    console.log(requestBody, 'x id', params.user, 'user id')
+    // console.log(requestBody, 'x id', params.user, 'user id')
     if(window.confirm(`delete ${e.target.name}`)) {
       const res = await fetch(`http://localhost:9000/delete/${params.user}`, {
         method: "POST",
@@ -75,12 +74,13 @@ const Home = () => {
       })
       const data = await res.json()
       console.log(data)
+      
     } else {
       return null
     }
   }
 
-  console.log(userData)
+  // console.log(userData)
 
   /// if you pass e.target  you cannot call e.preventDefault()
   return (

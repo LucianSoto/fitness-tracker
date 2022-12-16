@@ -94,29 +94,20 @@ const addExercise = async (req, res) => {
 
 const deleteExercise = async (req, res) => {
   const {id} = req.body
-  const userId = req.params
+  const userId = req.params._id
 
-  console.log(userId, id)
-//   collection.update(
-//     { _id: id, 'contact.phone': '+1786543589455' },
-//     { $unset: { 'contact.phone.$.number': '+1786543589455'} }
-// );
+  console.log(id, userId)
 
-// contact: {
-//   phone: [
-//       {
-//           number: "+1786543589455",
-//           place: "New Jersey",
-//           createdAt: ""
-//       }
-//       {
-//           number: "+1986543589455",
-//           place: "Houston",
-//           createdAt: ""
-//       }
-
-//   ]
-// }
+  User.updateOne( userId ,
+    { $pull: { exercises: { _id: id }}},
+    { new: true }, function (err, user) {
+      if(err) {
+        res.status(400).json({ message: "error deleting" })
+      } else {
+        res.status(200).json({ message: 'success', data: user })
+      }
+    }
+  )
 }
 
 module.exports = {signIn, home, updateExercise, createUser, addExercise, deleteExercise}
