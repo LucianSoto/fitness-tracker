@@ -55,14 +55,34 @@ const Home = () => {
   }
 
   const editExercise =(e) => {
-    console.log(e, 'editing')
+    console.log(e._id, 'editing')
   }
 
-  const deleteExercise = (e) => {
-    console.log(e, 'deleting')
+  const deleteExercise = async (e) => {
+    e.preventDefault()
+    // console.log(e.target.name, e.target.id)
+    const {id} = e.target
+    const requestBody = { id: id }
+    // console.log(requestBody, 'req body')
+    console.log(requestBody, 'x id', params.user, 'user id')
+    if(window.confirm(`delete ${e.target.name}`)) {
+      const res = await fetch(`http://localhost:9000/delete/${params.user}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody)
+      })
+      const data = await res.json()
+      console.log(data)
+    } else {
+      return null
+    }
   }
 
   console.log(userData)
+
+  /// if you pass e.target  you cannot call e.preventDefault()
   return (
     <div>
       <p className="user-name">Welcome~! {userData.user_name}</p>
@@ -104,7 +124,7 @@ const Home = () => {
                 <p>{exr.x_name}</p>
                 <p>{exr.duration}</p>
                 <button className="edit-delete" onClick={(e)=> editExercise(e.target)}>edit</button>
-                <button className='edit-delete' onClick={(e)=> deleteExercise(e.target)}></button>
+                <button id={exr._id} duration={exr.duration} name={exr.x_name} className='edit-delete' onClick={(e)=> deleteExercise(e)}>delete</button>
               </div>
             ))
           }

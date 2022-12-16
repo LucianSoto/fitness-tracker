@@ -75,7 +75,6 @@ const updateExercise = async (req, res) => {
 }
 
 const addExercise = async (req, res) => {
-
   const {id} = req.body
   User.findByIdAndUpdate(id,
     { $push: {"exercises": {
@@ -93,4 +92,31 @@ const addExercise = async (req, res) => {
   )
 }
 
-module.exports = {signIn, home, updateExercise, createUser, addExercise}
+const deleteExercise = async (req, res) => {
+  const {id} = req.body
+  const userId = req.params
+
+  console.log(userId, id)
+//   collection.update(
+//     { _id: id, 'contact.phone': '+1786543589455' },
+//     { $unset: { 'contact.phone.$.number': '+1786543589455'} }
+// );
+
+// contact: {
+//   phone: [
+//       {
+//           number: "+1786543589455",
+//           place: "New Jersey",
+//           createdAt: ""
+//       }
+//       {
+//           number: "+1986543589455",
+//           place: "Houston",
+//           createdAt: ""
+//       }
+
+//   ]
+// }
+}
+
+module.exports = {signIn, home, updateExercise, createUser, addExercise, deleteExercise}
