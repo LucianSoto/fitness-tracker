@@ -40,7 +40,7 @@ const Home = () => {
     })
     // console.log(res.json())
     const data = await res.json()
-    console.log(data.data, 'deeeeeiitaaa')
+    console.log(data.data, 'added')
     setUserData(prevState => (
       data.data
     ))
@@ -59,11 +59,8 @@ const Home = () => {
 
   const deleteExercise = async (e) => {
     e.preventDefault()
-    // console.log(e.target.name, e.target.id)
     const {id} = e.target
     const requestBody = { id: id }
-    // console.log(requestBody, 'req body')
-    // console.log(requestBody, 'x id', params.user, 'user id')
     if(window.confirm(`delete ${e.target.name}`)) {
       const res = await fetch(`http://localhost:9000/delete/${params.user}`, {
         method: "POST",
@@ -74,7 +71,7 @@ const Home = () => {
       })
       const data = await res.json()
       console.log(data)
-      
+      // setUserData(prevState => ())
     } else {
       return null
     }

@@ -94,17 +94,23 @@ const addExercise = async (req, res) => {
 
 const deleteExercise = async (req, res) => {
   const {id} = req.body
-  const userId = req.params._id
+  const userId = req.params
 
   console.log(id, userId)
 
-  User.updateOne( userId ,
+  // User.findById( userId.id, (err, user) =>{
+  //   if(err) { console.log(err)}
+  //   else {console.log(user)}
+  // })
+
+
+  User.findByIdAndUpdate( userId.id ,
     { $pull: { exercises: { _id: id }}},
-    { new: true }, function (err, user) {
+    { new: true, lean: true }, function (err, user) {
       if(err) {
         res.status(400).json({ message: "error deleting" })
       } else {
-        res.status(200).json({ message: 'success', data: user })
+        res.status(200).json({ message: 'success deleting', data: user, })
       }
     }
   )
